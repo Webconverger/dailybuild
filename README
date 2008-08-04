@@ -1,0 +1,1 @@
+www-data ALL=NOPASSWD: /srv/web/build.webconverger.com/build.sh
