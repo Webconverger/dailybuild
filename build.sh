@@ -1,5 +1,5 @@
 #!/bin/sh
-MIRROR="debian.lcs.mit.edu"
+MIRROR="69.90.119.57"
 DIST=${1:-sid}
 TEMPDIR="$(mktemp -d -t $DIST.XXXXXXXX)"
 
@@ -18,7 +18,7 @@ cd $TEMPDIR
 lh --version | head -n1
 wget -q -O- http://${MIRROR}/debian/project/trace/ftp-master.debian.org
 
-lh_config -a i386 -d $DIST -b usb-hdd -p standard-x11 -m http://$MIRROR/debian
+lh_config -a i386 -d $DIST -p standard-x11 -m http://$MIRROR/debian --debug
 
 find config/ -type f | while read FILENAME
 do
