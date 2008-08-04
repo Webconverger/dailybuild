@@ -17,12 +17,15 @@ Content-Type: text/html
 	<head>
 		<meta charset="utf-8" />
 		<title>live build $VERSION</title>
-        <link rel="stylesheet" type="text/css" href="http://debian-live.alioth.debian.org/images/style.css" />
+        <link rel="stylesheet" href="http://webconverger.com/style.css" type="text/css">
 	</head>
 <body>
 
 <ul>
 <li><a href="logs/">build log archive</a></li>
+<li><a href="/?d=sid">build SID</a></li>
+<li><a href="/">build lenny (default)</a></li>
+
 </ul>
 
 END
@@ -36,7 +39,12 @@ else
 
 	if [ -e logs/$VERSION.txt ]
 	then
-		echo "<h1>BUILD $VERSION ALREADY EXISTS</h1>"
+        if [[ `grep failed logs/$VERSION.txt` ]]
+        then
+            echo "<h1 style='color: red;'>BUILD $VERSION FAILED :-(</h1>"
+        else
+            echo "<h1 style='color: green;'>BUILD $VERSION SUCCEEDED :-)</h1>"
+        fi
 	else
 		sudo /srv/web/build.webconverger.com/build.sh $DIST &> logs/$VERSION.txt &
 	fi
