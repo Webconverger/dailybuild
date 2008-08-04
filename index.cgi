@@ -21,13 +21,6 @@ Content-Type: text/html
 	</head>
 <body>
 
-<ul>
-<li><a href="logs/">build log archive</a></li>
-<li><a href="/?d=sid">build SID</a></li>
-<li><a href="/">build lenny (default)</a></li>
-
-</ul>
-
 END
 
 if test `ls /tmp/$DIST.* | wc -l` -gt 0
@@ -60,6 +53,16 @@ cat <<END
 $(uname -a)
 $(lh --version | head -n1)
 </pre>
+
+<ul>
+<li><a href="logs/">build log archive</a></li>
+<li><a href="/?d=sid">build SID</a></li>
+<li><a href="/">build lenny (default)</a></li>
+<li><a href="http://git.webconverger.org/?p=build.git">CGI source code</a></li>
+<li><a href="http://lists.alioth.debian.org/pipermail/debian-live-devel/2008-August/004046.html">Suggestions welcome</a></li>
+</ul>
+
+
 
 </body>
 </html>
