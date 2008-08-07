@@ -1,1 +1,7 @@
+To setup on your host, you need to add:
 www-data ALL=NOPASSWD: /srv/web/build.webconverger.com/build.sh
+to /etc/sudoers
+
+Based on earlier build work at http://git.webvm.net/?p=build
+
+Thanks to Ben Armstrong & Chris Lamb for their comments.

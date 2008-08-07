@@ -23,10 +23,11 @@ Content-Type: text/html
 
 END
 
-if test `ls /tmp/$DIST.* | wc -l` -gt 0
+if test `ls /tmp/live.* | wc -l` -gt 0
 then
 
 	echo "<h1>BUILD IN PROGRESS !</h1>"
+	echo "<p>Only one build at a time :)</p>"
 
 else
 
@@ -39,7 +40,9 @@ else
             echo "<h1 style='color: green;'>BUILD $VERSION SUCCEEDED :-)</h1>"
         fi
 	else
-		sudo /srv/web/build.webconverger.com/build.sh $DIST &> logs/$VERSION.txt &
+        echo "<h1>Build $VERSION begun...</h1>"
+        sudo /srv/web/build.webconverger.com/wrapper.sh
+		#sudo /srv/web/build.webconverger.com/build.sh $DIST &> logs/$VERSION.txt &
 	fi
 
 fi
