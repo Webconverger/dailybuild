@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/sh -e
+TYPE="mini"
 MIRROR="ftp.egr.msu.edu"
-DIST=${1:-sid}
-TEMPDIR="$(mktemp -d -t live.$DIST.XXXXXXXX)" || exit 1
+TEMPDIR="$(mktemp -d -t live.XXXXXXXX)" || exit 1
 
 if test "$(id -u)" -ne "0"
 then
@@ -10,12 +10,12 @@ then
 fi
 
 mailerror () {
-echo "http://build.webconverger.com/logs/`date +%F.$DIST`.txt" | mail -a 'From: build.webconverger.com <hendry@webconverger.com>' -s "$DIST failed" kai.hendry@gmail.com
+echo BUILD FAILED at $(date)
+echo "http://build.webconverger.com/logs/$(date +%F).txt" | mail -a 'From: build.webconverger.com <hendry@webconverger.com>' -s "failed" kai.hendry@gmail.com
 exit 1
 }
 
-echo Setting up cleanup trap for $DIST at $TEMPDIR
-trap "cd $TEMPDIR; lh clean --purge; rm -vrf $TEMPDIR" 0 1 2 3 9 15
+trap "cd $TEMPDIR/config-webc/$TYPE; lh clean --purge; rm -vrf $TEMPDIR" 0 1 2 3 9 15
 
 chmod a+rx $TEMPDIR
 cd $TEMPDIR
@@ -24,7 +24,8 @@ mount
 lh --version | head -n1
 wget -q -O- http://${MIRROR}/debian/project/trace/ftp-master.debian.org
 
-lh_config -a i386 -d $DIST -p standard -m http://$MIRROR/debian --debug
+git clone git://git.debian.org/git/debian-live/config-webc.git
+cd config-webc/$TYPE
 
 find config/ -type f | while read FILENAME
 do
@@ -36,4 +37,4 @@ done
 
 time lh build || mailerror
 
-ls -lah
+for f in binary.*; do mv "$f" "/srv/web/build.webconverger.com/imgs/$TYPE.$(date +%F).${f##*.}"; done

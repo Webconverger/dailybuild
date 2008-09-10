@@ -42,7 +42,7 @@ else
         fi
 	else
         echo "<h1>Starting a build for $VERSION</h1>"
-		sudo /srv/web/build.webconverger.com/build.sh $DIST &> logs/$VERSION.txt &
+		sudo /srv/web/build.webconverger.com/build.sh &> logs/$VERSION.txt &
 	fi
 
 fi
