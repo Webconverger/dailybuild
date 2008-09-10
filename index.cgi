@@ -23,7 +23,7 @@ Content-Type: text/html
 
 END
 
-if test `ls /tmp/live.* | wc -l` -gt 0
+if [ $(ls /tmp/live.* 2> /dev/null | wc -l) -gt 0 ]
 then
 
 	echo "<h1>BUILD IN PROGRESS !</h1>"
@@ -31,17 +31,17 @@ then
 
 else
 
-	if [ -e logs/$VERSION.txt ]
+	if test -e logs/$VERSION.txt
 	then
-        if [[ `grep failed logs/$VERSION.txt` ]]
+        grep -m 1 -q binary.iso logs/$VERSION.txt
+        if test $? -eq "0"
         then
-            echo "<h1 style='color: red;'>BUILD $VERSION FAILED :-(</h1>"
-        else
             echo "<h1 style='color: green;'>BUILD $VERSION SUCCEEDED :-)</h1>"
+        else
+            echo "<h1 style='color: red;'>BUILD $VERSION FAILED :-(</h1>"
         fi
 	else
-        echo "<h1>No CRON build for $VERSION, sorry...</h1>"
-        #sudo /srv/web/build.webconverger.com/wrapper.sh
+        echo "<h1>Starting a build for $VERSION</h1>"
 		sudo /srv/web/build.webconverger.com/build.sh $DIST &> logs/$VERSION.txt &
 	fi
 
@@ -53,7 +53,8 @@ cat <<END
 </p>
 
 <pre>
-$(uname -a)
+$(uptime)
+$(free -m)
 $(lh --version | head -n1)
 </pre>
 
@@ -62,7 +63,6 @@ $(lh --version | head -n1)
 <li><a href="/?d=sid">build SID</a></li>
 <li><a href="/">build lenny (default)</a></li>
 <li><a href="http://git.webconverger.org/?p=build.git">CGI source code</a></li>
-<li><a href="http://lists.alioth.debian.org/pipermail/debian-live-devel/2008-August/004046.html">Suggestions welcome</a></li>
 </ul>
 
 

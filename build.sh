@@ -17,10 +17,10 @@ exit 1
 echo Setting up cleanup trap for $DIST at $TEMPDIR
 trap "cd $TEMPDIR; lh clean --purge; rm -vrf $TEMPDIR" 0 1 2 3 9 15
 
-chmod a+rx $TEMPDIR # in order for index to check a build
+chmod a+rx $TEMPDIR
 cd $TEMPDIR
 
-mount # check existing mounts
+mount
 lh --version | head -n1
 wget -q -O- http://${MIRROR}/debian/project/trace/ftp-master.debian.org
 
@@ -37,5 +37,3 @@ done
 time lh build || mailerror
 
 ls -lah
-
-cd /tmp
