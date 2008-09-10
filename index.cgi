@@ -40,9 +40,9 @@ else
             echo "<h1 style='color: green;'>BUILD $VERSION SUCCEEDED :-)</h1>"
         fi
 	else
-        echo "<h1>Build $VERSION begun...</h1>"
-        sudo /srv/web/build.webconverger.com/wrapper.sh
-		#sudo /srv/web/build.webconverger.com/build.sh $DIST &> logs/$VERSION.txt &
+        echo "<h1>No CRON build for $VERSION, sorry...</h1>"
+        #sudo /srv/web/build.webconverger.com/wrapper.sh
+		sudo /srv/web/build.webconverger.com/build.sh $DIST &> logs/$VERSION.txt &
 	fi
 
 fi
