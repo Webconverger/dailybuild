@@ -11,7 +11,7 @@ fi
 
 mailerror () {
 echo BUILD FAILED at $(date)
-echo "http://build.webconverger.com/logs/$(date +%F).txt" | mail -a 'From: build.webconverger.com <hendry@webconverger.com>' -s "failed" kai.hendry@gmail.com
+echo "http://build.webconverger.com/logs/$TYPE.$(date +%F).txt" | mail -a 'From: build.webconverger.com <hendry@webconverger.com>' -s "failed" kai.hendry@gmail.com
 exit 1
 }
 
