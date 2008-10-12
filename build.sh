@@ -2,6 +2,7 @@
 TYPE="mini"
 MIRROR="ftp.egr.msu.edu"
 TEMPDIR="$(mktemp -d -t live.XXXXXXXX)" || exit 1
+NAME=$TYPE.$(date +%s)
 
 if test "$(id -u)" -ne "0"
 then
@@ -11,7 +12,7 @@ fi
 
 mailerror () {
 echo BUILD FAILED at $(date)
-echo "http://build.webconverger.com/logs/$TYPE.$(date +%F).txt" | mail -a 'From: build.webconverger.com <hendry@webconverger.com>' -s "failed" kai.hendry@gmail.com
+echo "http://build.webconverger.com/logs/$NAME.txt" | mail -a 'From: build.webconverger.com <hendry@webconverger.com>' -s "failed" kai.hendry@gmail.com
 exit 1
 }
 
@@ -37,4 +38,7 @@ done
 
 time lh build || mailerror
 
-for f in binary.*; do mv "$f" "/srv/web/build.webconverger.com/imgs/$TYPE.$(date +%F).${f##*.}"; done
+ls -lah
+
+for f in binary.*; do mv "$f" "/srv/web/build.webconverger.com/imgs/$NAME.${f##*.}"; done
+mv source.tar.gz "/srv/web/build.webconverger.com/imgs/$NAME.tar.gz"
