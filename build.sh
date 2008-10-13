@@ -1,8 +1,9 @@
-#!/bin/sh -e
+#!/bin/sh -ex
 TYPE="mini"
-MIRROR="ftp.egr.msu.edu"
+MIRROR="mirror.webconverger.com"
+OUTPUT="/srv/www/build.webconverger.org/output"
 TEMPDIR="$(mktemp -d -t live.XXXXXXXX)" || exit 1
-NAME=$TYPE.$(date --iso-8601=minutes)
+NAME=$TYPE.$1
 
 if test "$(id -u)" -ne "0"
 then
@@ -11,7 +12,7 @@ then
 fi
 
 mailerror () {
-echo BUILD FAILED at $(date)
+echo BUILD FAILED at $NAME
 echo "http://build.webconverger.com/logs/$NAME.txt" | mail -a 'From: build.webconverger.com <hendry@webconverger.com>' -s "failed" kai.hendry@gmail.com
 exit 1
 }
@@ -32,7 +33,13 @@ dpkg -l live-helper
 wget -q -O- http://${MIRROR}/debian/project/trace/ftp-master.debian.org
 
 git clone git://git.debian.org/git/debian-live/config-webc.git
+
 cd config-webc/$TYPE
+
+if test $HOSTNAME = "hetty"
+then
+	git checkout -b hetty origin/hetty
+fi
 
 find config/ -type f | while read FILENAME
 do
@@ -46,7 +53,7 @@ echo "Building default (ISO)"
 time lh build || mailerror
 
 ls -lah
-for f in binary.*; do mv "$f" "/srv/web/build.webconverger.com/imgs/$NAME.${f##*.}"; done
+for f in binary.*; do mv "$f" "$OUTPUT/$NAME.${f##*.}"; done
 
 # Lets build USB now too
 sed -i 's/\(^LH_BOOTLOADER.*\)/#\1/' config/binary
@@ -58,6 +65,10 @@ echo "Building USB image"
 time lh binary || mailerror
 
 ls -lah
-for f in binary.*; do mv "$f" "/srv/web/build.webconverger.com/imgs/$NAME.${f##*.}"; done
+for f in binary.*; do mv "$f" "$OUTPUT/$NAME.${f##*.}"; done
+if test -e source.tar.gz
+then
+	mv source.tar.gz "$OUTPUT/$NAME.tar.gz"
+fi
 
-mv source.tar.gz "/srv/web/build.webconverger.com/imgs/$NAME.tar.gz"
+chown -R www-data:www-data $OUTPUT
