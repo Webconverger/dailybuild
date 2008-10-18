@@ -1,13 +1,12 @@
-#!/bin/sh -ex
-MIRROR="mirror.webconverger.com"
-OUTPUT="/srv/www/build.webconverger.org/output"
-TEMPDIR="$(mktemp -d -t live.XXXXXXXX)" || exit 1
+#!/bin/sh -e
+. $(dirname $0)/config
 NAME=$1
 TYPE=$(echo $NAME | awk -F . '{print $1}')
+TEMPDIR="$(mktemp -d -t $NAME.XXXXXXXX)" || exit 1
 
 if test "$(id -u)" -ne "0"
 then
-    echo "not root" >&2
+    echo "Super user required :-)" >&2
     exit 1
 fi
 

@@ -1,5 +1,4 @@
-BUILDID="mini.$(date --rfc-3339=date)"
-LOG=/srv/www/build.webconverger.org/output/$BUILDID.txt
+. $(dirname $0)/config
 if test -e $LOG
 then
     echo $LOG build already run?

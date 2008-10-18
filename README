@@ -1,13 +1,6 @@
-To setup on your host, you need to add:
-www-data ALL=NOPASSWD: /srv/web/build.webconverger.com/build.sh
-to /etc/sudoers
-
 Thanks to Ben Armstrong & Chris Lamb for their comments.
-
-The build script has to be run in a terminal (not via CGI or CRON) because of a
-xfonts-scalable bug: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=498189
 
 # Crontab contents:
 
-@daily sudo /srv/web/build.webconverger.com/runme.sh
+@daily sudo /srv/web/build.webconverger.com/webc-build.sh
 @daily find /srv/web/build.webconverger.com/imgs -mindepth 1 -maxdepth 1 -ctime +4 -exec rm -vrf {} \;
