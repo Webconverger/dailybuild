@@ -12,7 +12,7 @@ fi
 
 mailerror () {
 echo BUILD FAILED at $NAME
-echo "http://build.webconverger.com/logs/$NAME.txt" |
+echo "$LOG" |
 mail -a 'From: hendry@webconverger.com' -s "failed" kai.hendry@gmail.com
 exit 1
 }
