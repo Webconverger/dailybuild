@@ -42,6 +42,10 @@ then
 	git checkout -b hetty origin/hetty
 fi
 
+# info about the git repo
+git rev-parse HEAD
+git describe --all
+
 find config/ -type f | while read FILENAME
 do
    while read LINE
