@@ -1,8 +1,9 @@
-#!/bin/sh -e
+#!/bin/sh -ex
 . $(dirname $0)/config
 NAME=$1
 TYPE=$(echo $NAME | awk -F . '{print $1}')
 TEMPDIR="$(mktemp -d -t $NAME.XXXXXXXX)" || exit 1
+echo Build type: $TYPE
 
 if test "$(id -u)" -ne "0"
 then
@@ -37,25 +38,21 @@ git clone git://git.debian.org/git/debian-live/config-webc.git
 
 cd config-webc/$TYPE
 
-if test $HOSTNAME = "hetty"
-then
-	git checkout -b hetty origin/hetty
-fi
-
 # info about the git repo
 git rev-parse HEAD
 git describe --all
 
-find config/ -type f | while read FILENAME
-do
-   while read LINE
-   do
-       echo "${FILENAME}:${LINE}"
-   done < $FILENAME
-done
+#find config/ -type f | while read FILENAME
+#do
+#   while read LINE
+#   do
+#       echo "${FILENAME}:${LINE}"
+#   done < $FILENAME
+#done
 
-echo "Building default (ISO)"
-time lh build || mailerror
+lh_config
+time lh_build || mailerror
+echo FINISH $?
 
 ls -lah # Move build into output directory
 for f in binary.*; do mv "$f" "$OUTPUT/$NAME.${f##*.}"; done
