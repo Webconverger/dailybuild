@@ -48,9 +48,17 @@ git rev-parse HEAD
 lh_config # scripts/config
 time lh_build || mailerror
 
-ls -lah # Move build into output directory
+ls -lh
 
 for f in binary.*; do mv "$f" "${OUTPUT}/${NAME}-usb.${f##*.}"; done
+
+if ! ls -lh chroot/boot/*
+then
+	echo There is a bug here. When run from cron, the script somehow purges chroot/boot
+	echo
+	echo This makes the next lh_binary FAIL
+	exit
+fi
 
 if test $ISO
 then
