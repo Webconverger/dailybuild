@@ -45,7 +45,7 @@ cd config-webc/$TYPE
 # info about the git repo
 git rev-parse HEAD
 
-lh_config # scripts/config
+lh_config --debian-installer disabled # dis-able installer for USB images
 time lh_build || mailerror
 
 ls -lh
@@ -65,7 +65,7 @@ then
 
 	echo Building ISO
 	lh_clean noautoconfig --binary
-	lh_config noautoconfig -b iso --bootloader grub
+	lh_config noautoconfig -b iso --bootloader grub --debian-installer live
 
 	time lh_binary || mailerror
 
