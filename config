@@ -1,6 +1,6 @@
-MIRROR="mirror.webconverger.com"
+MIRROR="ftp.de.debian.org"
 OUTPUT="/srv/www/build.webconverger.org/output"
 BUILDID=webconverger.$(date --rfc-3339=date -d "$(wget -q -O- http://${MIRROR}/debian/project/trace/ftp-master.debian.org | head -1)").$(wget -q http://debian.webconverger.com/lenny/Packages -O - | grep -A 6 webconverger-base | grep "^Version" | awk '{print $NF}')
 LOG=$OUTPUT/$BUILDID.txt
-#DEBUG=1
+DEBUG=0
 ISO=1

@@ -1,7 +1,7 @@
 #!/bin/sh -ex
 if test "$(id -u)" -ne "0"
 then
-    echo "Super user required :-)" >&2
+    echo "Super user required" >&2
     exit 1
 fi
 
@@ -25,9 +25,11 @@ mail -a 'From: hendry@webconverger.com' -s "failed" kai.hendry@gmail.com
 exit 1
 }
 
-if test ! $DEBUG # Whilst debugging we might want to inspect the detritus
+if test $DEBUG -eq 1
 then
-    trap "cd $TEMPDIR/config-webc/$TYPE; lh clean --purge; rm -vrf $TEMPDIR" 0 1 2 3 9 15
+	echo DEBUG MODE
+else
+	trap "cd $TEMPDIR/config-webc/$TYPE; lh clean --purge; rm -vrf $TEMPDIR" 0 1 2 3 9 15
 fi
 
 chmod a+rx $TEMPDIR && cd $TEMPDIR
@@ -45,12 +47,14 @@ cd config-webc/$TYPE
 # info about the git repo
 git rev-parse HEAD
 
-lh_config --debian-installer disabled # dis-able installer for USB images
+lh_config
 time lh_build || mailerror
 
 ls -lh
 
 for f in binary.*; do mv "$f" "${OUTPUT}/${NAME}-usb.${f##*.}"; done
+rm -f $OUTPUT/latest.img
+ln -s "${OUTPUT}/${NAME}-usb.img" $OUTPUT/latest.img
 
 if ! ls -lh chroot/boot/*
 then
@@ -65,19 +69,19 @@ then
 
 	echo Building ISO
 	lh_clean noautoconfig --binary
-	lh_config noautoconfig -b iso --bootloader grub --debian-installer live
+	lh_config noautoconfig --source enabled -b iso --bootloader grub --bootappend-live "quiet homepage=http://portal.webconverger.com/ nonetworking nosudo splash video=vesa:ywrap,mtrr vga=788 nopersistent"
 
 	time lh_binary || mailerror
 
 	for f in binary.*; do mv "$f" "$OUTPUT/${NAME}-iso.${f##*.}"; done
-
+	rm -f $OUTPUT/latest.iso
+	ln -s "$OUTPUT/${NAME}-iso.iso" $OUTPUT/latest.iso
 fi
+
 
 if test -e source.tar.gz # If LH_SOURCE is enabled
 then
-
 	mv source.tar.gz "$OUTPUT/$NAME.tar.gz"
-
 fi
 
 chown -R www-data:www-data $OUTPUT
