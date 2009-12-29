@@ -4,3 +4,4 @@ BUILDID=webconverger.$(date --rfc-3339=date -d "$(wget -q -O- http://${MIRROR}/d
 LOG=$OUTPUT/$BUILDID.txt
 DEBUG=0
 ISO=1
+SOURCE=1

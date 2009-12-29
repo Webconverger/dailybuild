@@ -47,40 +47,38 @@ cd config-webc/$TYPE
 # info about the git repo
 git rev-parse HEAD
 
-lh_config
-time lh_build || mailerror
+lh config
 
+lh build || mailerror
 ls -lh
-
 for f in binary.*; do mv "$f" "${OUTPUT}/${NAME}-usb.${f##*.}"; done
-rm -f $OUTPUT/latest.img
-ln -s "${OUTPUT}/${NAME}-usb.img" $OUTPUT/latest.img
+rm -f $OUTPUT/.htaccess
+echo "Redirect /latest.img /${NAME}-usb.img" > $OUTPUT/.htaccess
 
-if ! ls -lh chroot/boot/*
-then
-	echo There is a bug here. When run from cron, the script somehow purges chroot/boot
-	echo
-	echo This makes the next lh_binary FAIL
-	exit
-fi
+	if ! ls -lh chroot/boot/*
+	then
+		echo There is a bug here. When run from cron, the script purges chroot/boot from /usr/share/live-helper/helpers/lh_bootstrap_cache
+		echo
+		echo This makes the next lh binary FAIL
+		exit
+	fi
 
 if test $ISO
 then
-
 	echo Building ISO
-	lh_clean noautoconfig --binary
-	lh_config noautoconfig --source enabled -b iso --bootloader grub --bootappend-live "quiet homepage=http://portal.webconverger.com/ nonetworking nosudo splash video=vesa:ywrap,mtrr vga=788 nopersistent"
+	lh clean noautoconfig --binary
+	lh config noautoconfig --source true -b iso --bootappend-live "quiet homepage=http://portal.webconverger.com/ nonetworking nosudo splash video=vesa:ywrap,mtrr vga=788 nopersistent"
 
-	time lh_binary || mailerror
+	lh binary || mailerror
 
 	for f in binary.*; do mv "$f" "$OUTPUT/${NAME}-iso.${f##*.}"; done
-	rm -f $OUTPUT/latest.iso
-	ln -s "$OUTPUT/${NAME}-iso.iso" $OUTPUT/latest.iso
+	echo "Redirect /latest.iso /${NAME}-iso.iso" >> $OUTPUT/.htaccess
 fi
 
-
-if test -e source.tar.gz # If LH_SOURCE is enabled
+if test $SOURCE
 then
+	lh source
+	mv source.list "$OUTPUT/$NAME.source.list"
 	mv source.tar.gz "$OUTPUT/$NAME.tar.gz"
 fi
 
