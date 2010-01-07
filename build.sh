@@ -1,4 +1,5 @@
-#!/bin/sh -ex
+#!/bin/bash
+
 if test "$(id -u)" -ne "0"
 then
     echo "Super user required" >&2
@@ -9,14 +10,12 @@ fi
 
 NAME=$1
 
-if [ -z $NAME ]
+if test -z "$NAME"
 then
 	NAME=$BUILDID
 fi
 
-TYPE=$(echo $NAME | awk -F . '{print $1}')
 TEMPDIR="$(mktemp -d -t $NAME.XXXXXXXX)" || exit 1
-echo Build type: $TYPE
 
 mailerror () {
 echo BUILD FAILED at $NAME
@@ -25,16 +24,23 @@ mail -a 'From: hendry@webconverger.com' -s "failed" kai.hendry@gmail.com
 exit 1
 }
 
-if test $DEBUG -eq 1
+if test "$DEBUG" -eq 1
 then
-	echo DEBUG MODE
+	echo DEBUG MODE - $TEMPDIR needs to be manually deleted
 else
-	trap "cd $TEMPDIR/config-webc/$TYPE; lh clean --purge; rm -vrf $TEMPDIR" 0 1 2 3 9 15
+	trap "cd $TEMPDIR/config-webc/webconverger; lh clean --purge; rm -vrf $TEMPDIR" 0 1 2 3 9 15
 fi
 
 chmod a+rx $TEMPDIR && cd $TEMPDIR
 
-mount # To check in case /proc is mounted already
+mount
+
+if test "$(/sbin/losetup -a | wc -l)" -gt 0
+then
+	echo Unclean mounts!
+	losetup -a
+	exit
+fi
 
 echo Live Helper Version:
 dpkg --status live-helper | egrep "^Version" | awk '{print $2}'
@@ -42,7 +48,7 @@ dpkg --status live-helper | egrep "^Version" | awk '{print $2}'
 # Live helper configuration (Webconverger)
 git clone git://git.debian.org/git/debian-live/config-webc.git
 
-cd config-webc/$TYPE
+cd config-webc/webconverger
 
 # info about the git repo
 git rev-parse HEAD
@@ -55,15 +61,7 @@ for f in binary.*; do mv "$f" "${OUTPUT}/${NAME}-usb.${f##*.}"; done
 rm -f $OUTPUT/.htaccess
 echo "Redirect /latest.img /${NAME}-usb.img" > $OUTPUT/.htaccess
 
-	if ! ls -lh chroot/boot/*
-	then
-		echo There is a bug here. When run from cron, the script purges chroot/boot from /usr/share/live-helper/helpers/lh_bootstrap_cache
-		echo
-		echo This makes the next lh binary FAIL
-		exit
-	fi
-
-if test $ISO
+if test -n "$ISO"
 then
 	echo Building ISO
 	lh clean noautoconfig --binary
@@ -75,7 +73,7 @@ then
 	echo "Redirect /latest.iso /${NAME}-iso.iso" >> $OUTPUT/.htaccess
 fi
 
-if test $SOURCE
+if test -n "$SOURCE"
 then
 	lh source
 	mv source.list "$OUTPUT/$NAME.source.list"

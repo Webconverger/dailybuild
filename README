@@ -2,5 +2,5 @@ Thanks to Ben Armstrong & Chris Lamb for their comments.
 
 # Crontab contents:
 
-@daily sudo /srv/web/build.webconverger.com/webc-build.sh
-@daily find /srv/web/build.webconverger.com/imgs -mindepth 1 -maxdepth 1 -ctime +4 -exec rm -vrf {} \;
+@daily sudo /srv/www/build.webconverger.org/webc-build.sh
+@daily find /srv/www/build.webconverger.org/output -mindepth 1 -maxdepth 1 -ctime +4 -exec rm -vrf {} \;
