@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo $PATH
+
 if test "$(id -u)" -ne "0"
 then
     echo "Super user required" >&2
@@ -24,7 +26,7 @@ mail -a 'From: hendry@webconverger.com' -s "failed" kai.hendry@gmail.com
 exit 1
 }
 
-if test "$DEBUG" -eq 1
+if test "$DEBUG"
 then
 	echo DEBUG MODE - $TEMPDIR needs to be manually deleted
 else

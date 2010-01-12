@@ -2,5 +2,7 @@ Thanks to Ben Armstrong & Chris Lamb for their comments.
 
 # Crontab contents:
 
-@daily sudo /srv/www/build.webconverger.org/webc-build.sh
-@daily find /srv/www/build.webconverger.org/output -mindepth 1 -maxdepth 1 -ctime +4 -exec rm -vrf {} \;
+	PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+	# m h  dom mon dow   command
+	@daily /srv/www/build.webconverger.org/webc-build.sh
+	@daily find /srv/www/build.webconverger.org/output -mindepth 1 -maxdepth 1 -ctime +4 -exec rm -vrf {} \;
