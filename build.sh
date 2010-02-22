@@ -57,26 +57,16 @@ git rev-parse HEAD
 
 lh config
 
-lh build || mailerror
+time lh build || mailerror
 ls -lh
-for f in binary.*; do mv "$f" "${OUTPUT}/${NAME}-usb.${f##*.}"; done
-rm -f $OUTPUT/.htaccess
-echo "Redirect /latest.img /${NAME}-usb.img" > $OUTPUT/.htaccess
-
-if test -n "$ISO"
-then
-	echo Building ISO
-	lh clean noautoconfig --binary
-	lh config noautoconfig --source true -b iso --bootappend-live "quiet homepage=http://portal.webconverger.com/ nonetworking nosudo splash video=vesa:ywrap,mtrr vga=788 nopersistent"
-
-	lh binary || mailerror
-
-	for f in binary.*; do mv "$f" "$OUTPUT/${NAME}-iso.${f##*.}"; done
-	echo "Redirect /latest.iso /${NAME}-iso.iso" >> $OUTPUT/.htaccess
-fi
+for f in binary.*; do mv "$f" "${OUTPUT}/${NAME}.${f##*.}"; done
+mv binary-hybrid.iso "${OUTPUT}/${NAME}.iso"
+echo "Redirect /latest.img /${NAME}.iso" > $OUTPUT/.htaccess
+echo "Redirect /latest.iso /${NAME}.iso" >> $OUTPUT/.htaccess
 
 if test -n "$SOURCE"
 then
+	lh config noautoconfig --source true
 	lh source
 	mv source.list "$OUTPUT/$NAME.source.list"
 	mv source.tar.gz "$OUTPUT/$NAME.tar.gz"
