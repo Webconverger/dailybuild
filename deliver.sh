@@ -1,5 +1,5 @@
 set -e
-release=6.1
+release=6.2
 output=/srv/www/download.webconverger.org
 
 rsync -P output/$1.iso $output/webc-$release.iso

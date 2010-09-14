@@ -52,6 +52,8 @@ git clone git://git.debian.org/git/debian-live/config-webc.git
 
 cd config-webc/webconverger
 
+git checkout -b squeeze origin/squeeze
+
 # info about the git repo
 git rev-parse HEAD
 
@@ -63,13 +65,9 @@ for f in binary.*; do mv "$f" "${OUTPUT}/${NAME}.${f##*.}"; done
 mv binary-hybrid.iso "${OUTPUT}/${NAME}.iso"
 echo "Redirect /latest.img /${NAME}.iso" > $OUTPUT/.htaccess
 echo "Redirect /latest.iso /${NAME}.iso" >> $OUTPUT/.htaccess
-
-if test -n "$SOURCE"
-then
-	lh config noautoconfig --source true
-	lh source
-	mv source.list "$OUTPUT/$NAME.source.list"
-	mv source.tar.gz "$OUTPUT/$NAME.tar.gz"
-fi
+mv source.list "$OUTPUT/$NAME.source.list"
+mv source.tar.gz "$OUTPUT/$NAME.tar.gz"
 
 chown -R www-data:www-data $OUTPUT
+
+rm -rf $TEMPDIR

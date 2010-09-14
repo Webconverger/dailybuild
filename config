@@ -1,7 +1,7 @@
-MIRROR="ftp.de.debian.org"
+MIRROR="ftp.us.debian.org"
 OUTPUT="/srv/www/build.webconverger.org/output"
 BUILDID=webconverger.$(date --rfc-3339=date -d "$(wget -q -O- http://${MIRROR}/debian/project/trace/ftp-master.debian.org | head -1)")
 LOG=$OUTPUT/$BUILDID.txt
 ISO=1
 SOURCE=1
-DEBUG=1
+DEBUG=0
