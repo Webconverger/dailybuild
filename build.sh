@@ -52,8 +52,6 @@ git clone git://git.debian.org/git/debian-live/config-webc.git
 
 cd config-webc/webconverger
 
-git checkout -b squeeze origin/squeeze
-
 # info about the git repo
 git rev-parse HEAD
 
