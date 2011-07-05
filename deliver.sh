@@ -1,10 +1,9 @@
 set -e
-release=6.2
+release=8.0
 output=/srv/www/download.webconverger.org
 
 rsync -P output/$1.iso $output/webc-$release.iso
 rsync -P output/$1.packages $output/webc-$release.txt
-rsync -P output/$1.tar.gz $output/webc-$release.tar.gz
 
 cd $output
 echo sha1sum: >> $output/webc-$release.txt
