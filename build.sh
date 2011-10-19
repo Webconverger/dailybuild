@@ -26,7 +26,7 @@ mail -a 'From: hendry@webconverger.com' -s "failed" kai.hendry@gmail.com
 exit 1
 }
 
-if test "$DEBUG"
+if "$DEBUG"
 then
 	echo DEBUG MODE - $TEMPDIR needs to be manually deleted
 else
@@ -44,8 +44,8 @@ then
 	exit
 fi
 
-echo Live Helper Version:
-dpkg --status live-helper | egrep "^Version" | awk '{print $2}'
+echo "Debian Live, live-build version: "
+dpkg --status live-build | egrep "^Version" | awk '{print $2}'
 
 # Live helper configuration (Webconverger)
 git clone git://git.debian.org/git/debian-live/config-webc.git
@@ -57,10 +57,15 @@ git rev-parse HEAD
 
 lb config
 
-time lb build || mailerror
-ls -lh
-for f in binary.*; do mv "$f" "${OUTPUT}/${NAME}.${f##*.}"; done
+time lb build
+
+# Bug in a37
+lb binary syslinux
+
+test -f binary-hybrid.iso || exit
+
 mv binary-hybrid.iso "${OUTPUT}/${NAME}.iso"
+for f in binary.*; do mv "$f" "${OUTPUT}/${NAME}.${f##*.}"; done
 echo "Redirect /latest.img /${NAME}.iso" > $OUTPUT/.htaccess
 echo "Redirect /latest.iso /${NAME}.iso" >> $OUTPUT/.htaccess
 for s in source.*; do mv "$s" "${OUTPUT}/src-${NAME}.${s##*.}"; done
