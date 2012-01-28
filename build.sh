@@ -59,9 +59,6 @@ lb config
 
 time lb build
 
-# Bug in a37
-lb binary syslinux
-
 test -f binary-hybrid.iso || exit
 
 mv binary-hybrid.iso "${OUTPUT}/${NAME}.iso"
