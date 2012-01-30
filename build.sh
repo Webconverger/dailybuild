@@ -26,11 +26,11 @@ mail -a 'From: hendry@webconverger.com' -s "failed" kai.hendry@gmail.com
 exit 1
 }
 
-if "$DEBUG"
+if test "$DEBUG"
 then
 	echo DEBUG MODE - $TEMPDIR needs to be manually deleted
 else
-	trap "cd $TEMPDIR/config-webc/webconverger; lb clean --purge; rm -vrf $TEMPDIR" 0 1 2 3 9 15
+	trap "cd $TEMPDIR/Debian-Live-config/webconverger; lb clean --purge; rm -vrf $TEMPDIR" 0 1 2 3 9 15
 fi
 
 chmod a+rx $TEMPDIR && cd $TEMPDIR
@@ -50,7 +50,7 @@ dpkg --status live-build | egrep "^Version" | awk '{print $2}'
 # Live helper configuration (Webconverger)
 git clone git://github.com/Webconverger/Debian-Live-config.git
 
-cd config-webc/webconverger
+cd Debian-Live-config/webconverger
 
 # info about the git repo
 git rev-parse HEAD
