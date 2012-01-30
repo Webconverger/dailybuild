@@ -48,7 +48,7 @@ echo "Debian Live, live-build version: "
 dpkg --status live-build | egrep "^Version" | awk '{print $2}'
 
 # Live helper configuration (Webconverger)
-git clone git://git.debian.org/git/debian-live/config-webc.git
+git clone git://github.com/Webconverger/Debian-Live-config.git
 
 cd config-webc/webconverger
 
