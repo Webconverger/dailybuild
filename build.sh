@@ -55,9 +55,8 @@ cd Debian-Live-config/webconverger
 # info about the git repo
 git rev-parse HEAD
 
-lb config
-
-time lb build
+# http://webconverger.org/upgrade/
+make chroot
 
 test -f binary-hybrid.iso || exit
 
@@ -69,4 +68,4 @@ for s in source.*; do mv "$s" "${OUTPUT}/src-${NAME}.${s##*.}"; done
 
 chown -R www-data:www-data $OUTPUT
 
-rm -rf $TEMPDIR
+test "$DEBUG" = "" && rm -rf $TEMPDIR
