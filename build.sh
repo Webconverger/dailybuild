@@ -19,6 +19,8 @@ fi
 
 TEMPDIR="$(mktemp -d -t $NAME.XXXXXXXX)" || exit 1
 
+echo TEMPDIR $TEMPDIR
+
 mailerror () {
 echo BUILD FAILED at $NAME
 echo "$LOG" |
@@ -48,9 +50,10 @@ echo "Debian Live, live-build version: "
 dpkg --status live-build | egrep "^Version" | awk '{print $2}'
 
 # Live helper configuration (Webconverger)
-git clone git://github.com/Webconverger/Debian-Live-config.git
+git clone --depth 1 git://github.com/Webconverger/Debian-Live-config.git
 
 cd Debian-Live-config/webconverger
+git clone --depth 1 git://github.com/Webconverger/webc.git chroot
 
 # info about the git repo
 git rev-parse HEAD
