@@ -53,10 +53,9 @@ dpkg --status live-build | egrep "^Version" | awk '{print $2}'
 git clone --depth 1 git://github.com/Webconverger/Debian-Live-config.git
 
 cd Debian-Live-config/webconverger
-git clone --depth 1 git://github.com/Webconverger/webc.git chroot
 
 # info about the git repo
-git rev-parse HEAD
+git describe --always
 
 # http://webconverger.org/upgrade/
 make deploy
