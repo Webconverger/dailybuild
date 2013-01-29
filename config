@@ -1,5 +1,0 @@
-OUTPUT="/srv/www/build.webconverger.org/output"
-BUILDID=webconverger.$(date --rfc-3339=date)
-LOG=$OUTPUT/$BUILDID.txt
-#SOURCE=true
-#DEBUG=true
