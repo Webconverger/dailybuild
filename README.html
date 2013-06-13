@@ -6,7 +6,7 @@ html, body {font-family: sans-serif;}
 </style>
 </head>
 <body>
-<h1>Webconverger daily builds for bug hunters</h1>
+<h1>Webconverger daily builds</h1>
 
 <p>Scared? Please see the <a
 href="http://download.webconverger.com/">Webconverger download site</a> for
@@ -27,6 +27,15 @@ tried and tested end user products.</p>
  you!</p>
 
 <p><a href="https://github.com/Webconverger/dailybuild">Source code on github of this build tool</a></p>
+
+<h3>Cronjob</h3>
+
+<p>As root:</p>
+
+<pre>
+@daily /srv/www/build.webconverger.org/webc-build.sh
+@daily find /srv/www/build.webconverger.org/ -mindepth 1 -maxdepth 1 -mtime +4 \( -name "*.txt" -o -name "*.iso" \) -exec rm -vrf {} \;
+</pre>
 
 </body>
 </html>

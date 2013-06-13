@@ -1,7 +1,15 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
-OUTPUT="/srv/www/build.webconverger.org/output"
-#DEBUG=true
+OUTPUT="/srv/www/build.webconverger.org"
+
+sha=$(git ls-remote git://github.com/Webconverger/webc.git refs/heads/master)
+shortsha=${sha:0:7}
+
+if ls $OUTPUT/webc-$shortsha.*
+then
+	echo Already built!
+	exit
+fi
 
 BUILDID=webconverger.$(date --rfc-3339=date)
 
@@ -34,7 +42,7 @@ test "$DEBUG" && echo TEMPDIR $TEMPDIR
 mailerror () {
 echo BUILD FAILED at $BUILDID
 echo "$LOG" |
-mail -a 'From: hendry@webconverger.com' -s "failed" kai.hendry@gmail.com
+mail -a 'From: hendry@webconverger.com' -s "uk failed" kai.hendry@gmail.com
 exit 1
 }
 
@@ -66,6 +74,6 @@ cd Debian-Live-config/webconverger
 git describe --always
 
 # http://webconverger.org/upgrade/
-make deploy
+make deploy OUTPUT=$OUTPUT
 
 chown -R www-data:www-data $OUTPUT
