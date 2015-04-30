@@ -1,3 +1,0 @@
-Redirect /latest.iso /webc-4b74283.iso 
-Redirect /latest.txt /webc-4b74283.txt 
-IndexIgnore webc-build.sh

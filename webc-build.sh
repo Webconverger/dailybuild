@@ -1,8 +1,9 @@
 #!/bin/bash -e
 
+branch=${1:-master}
 OUTPUT="/srv/www/build.webconverger.org"
 
-sha=$(git ls-remote git://github.com/Webconverger/webc.git refs/heads/master)
+sha=$(git ls-remote git://github.com/Webconverger/webc.git refs/heads/$branch)
 shortsha=${sha:0:7}
 
 if ls $OUTPUT/webc-$shortsha.*
@@ -11,19 +12,13 @@ then
 	exit
 fi
 
-BUILDID=webconverger.$(date --rfc-3339=date)
-
-if test "$1"
-then
-	branch=$1
-	BUILDID=webconverger.$branch.$(date --rfc-3339=date)
-fi
-
+BUILDID=webconverger.$branch.$(date --rfc-3339=date)
 LOG=$OUTPUT/$BUILDID.txt
+echo Building $BUILDID ... logging to $OUTPUT/$BUILDID.txt
 
 exec >$LOG 2>&1
 
-test "$branch" && figlet $branch
+figlet $branch $shortsha
 
 test "$DEBUG" && echo $PATH
 
@@ -42,7 +37,7 @@ test "$DEBUG" && echo TEMPDIR $TEMPDIR
 mailerror () {
 echo BUILD FAILED at $BUILDID
 echo "$LOG" |
-mail -a 'From: hendry@webconverger.com' -s "uk failed" kai.hendry@gmail.com
+mail -a 'From: hendry@webconverger.com' -s "$BUILDID failed" hendry+build@webconverger.com
 exit 1
 }
 
@@ -60,20 +55,13 @@ fi
 echo "Debian Live, live-build version: "
 dpkg --status live-build | egrep "^Version" | awk '{print $2}'
 
-# Live helper configuration (Webconverger)
-if test "$branch"
-then
-	git clone --depth 1 -b $branch git://github.com/Webconverger/Debian-Live-config.git
-else
-	git clone --depth 1 git://github.com/Webconverger/Debian-Live-config.git
-fi
-
+git clone --depth 1 git://github.com/Webconverger/Debian-Live-config.git
 cd Debian-Live-config/webconverger
 
-# info about the git repo
+# info about build config we have
 git describe --always
 
 # http://webconverger.org/upgrade/
-make deploy OUTPUT=$OUTPUT
+make deploy OUTPUT=$OUTPUT BRANCH=$branch
 
 chown -R www-data:www-data $OUTPUT
