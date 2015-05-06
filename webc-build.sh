@@ -62,6 +62,10 @@ cd Debian-Live-config/webconverger
 git describe --always
 
 # http://webconverger.org/upgrade/
-make deploy OUTPUT=$OUTPUT BRANCH=$branch
+make BRANCH=$branch
 
 chown -R www-data:www-data $OUTPUT
+
+mv live-image-i386.hybrid.iso $OUTPUT/webc-$shortsha.iso
+echo -e "Options All\nOptions Indexes FollowSymLinks" > $OUTPUT/.htaccess
+echo "Redirect /latest.iso /webc-$shortsha.iso" >> $OUTPUT/.htaccess

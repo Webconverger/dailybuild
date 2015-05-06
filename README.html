@@ -4,8 +4,11 @@
 <style>
 html, body {font-family: sans-serif;}
 </style>
+<title>Webconverger daily builds</title>
 </head>
 <body>
+
+<img src=http://webconverger.com/images/logo.svg>
 <h1>Webconverger daily builds</h1>
 
 <p>Scared? Please see the <a
@@ -16,15 +19,14 @@ tried and tested end user releases.</p>
 
 <ul>
 <li><a href="http://build.webconverger.org/latest.iso">http://build.webconverger.org/latest.iso</a></li>
-<li><a href="http://build.webconverger.org/latest.txt">http://build.webconverger.org/latest.txt</a></li>
 </ul>
 
 <p>Hints on <a href="http://webconverger.org/testing/">testing can be found on the wiki</a>.</p>
 
-<p>
- Please report any bugs or issues to the <a
-	 href="http://groups.google.com/group/webc-users">mailing list</a> or <a href="https://github.com/Webconverger/webc/issues">issue tracker</a>. Thank
- you!</p>
+<p> Please report any bugs or issues to the <a
+	href="http://groups.google.com/group/webc-users">mailing list</a> or <a
+ href="https://github.com/Webconverger/webc/issues">issue tracker</a>. Thank
+you!</p>
 
 <p><a href="https://github.com/Webconverger/dailybuild">Source code on github of this build tool</a></p>
 
@@ -36,6 +38,8 @@ tried and tested end user releases.</p>
 @daily /srv/www/build.webconverger.org/webc-build.sh
 @daily find /srv/www/build.webconverger.org/ -mindepth 1 -maxdepth 1 -mtime +4 \( -name "*.txt" -o -name "*.iso" \) -exec rm -vrf {} \;
 </pre>
+
+<p>More <a href=https://webconverger.org/servers/>information on Webconverger servers</a>.</p>
 
 </body>
 </html>
